@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <link href="${mvc.basePath}/../app.css" rel="stylesheet">
-<title>ユーザ管理</title>
+<title>メッセージアプリ：ユーザ管理</title>
 <style>
 .row_create {
 	display: grid;
@@ -20,6 +20,8 @@
 </style>
 </head>
 <body>
+	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/list">メッセージページ</a>] [<a href="${mvc.basePath}/logout">ログアウト</a>]
+	<hr>
 	<h1>新規ユーザ追加</h1>
 
 	<form class="row_create" action="${mvc.basePath}/users" method="POST">
@@ -47,12 +49,5 @@
 				<button formaction="${mvc.basePath}/user_delete">削除</button>
 			</form>
 		</c:forEach>
-
-		<p>
-			<a href="${mvc.basePath}/list">メッセージページへ</a>
-		</p>
-		<p>
-			<a href="${mvc.basePath}/">ホームへ戻る</a>
-		</p>
 </body>
 </html>

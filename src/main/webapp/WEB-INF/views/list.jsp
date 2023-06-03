@@ -6,10 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <link href="${mvc.basePath}/../app.css" rel="stylesheet">
-<title>メッセージの累積</title>
+<title>メッセージアプリ：メッセージ</title>
 </head>
 <body>
-	<a href="${mvc.basePath}/users">ユーザ管理</a>
+	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>] [<a href="${mvc.basePath}/logout">ログアウト</a>]
 	<hr>
 	${ name }${ isAdmin ? "[管理者]" : "" }さん、こんにちは！
 	<form action="${mvc.basePath}/list" method="POST">
@@ -28,11 +28,5 @@
 	<c:forEach var="mes" items="${messagesModel}">
 		<div>${mes.name}:${mes.message}
 	</c:forEach>
-	<p>
-		<a href="${mvc.basePath}/logout">ログアウト</a>
-	</p>
-	<p>
-		<a href="${mvc.basePath}/">ホームへ戻る</a>
-	</p>
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.example;
 
+import java.net.URI;
+import java.util.List;
+
 import com.example.auth.IdentityStoreConfig;
-import com.example.model.LoginUserModel;
 import com.example.model.message.MessageDTO;
 import com.example.model.message.MessagesDAO;
 import com.example.model.user.UserDTO;
@@ -12,6 +14,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
+import jakarta.mvc.MvcContext;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters;
@@ -23,11 +26,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import lombok.NoArgsConstructor;
 
 /**
@@ -46,6 +54,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @Path("/")
 public class MyController {
+	private static String basePath; 
+			
 	private final MessagesDAO messagesDAO;
 
 	private final UsersDAO usersDAO;
@@ -57,25 +67,39 @@ public class MyController {
 	private final SecurityContext securityContext;
 
 	@Inject
-	public MyController(Models models, MessagesDAO messagesDAO, UsersDAO usersDAO, LoginUserModel loginUserModel,
-			Pbkdf2PasswordHash passwordHash, SecurityContext securityContext) {
+	public MyController(Models models, MessagesDAO messagesDAO, UsersDAO usersDAO, Pbkdf2PasswordHash passwordHash,
+			SecurityContext securityContext, MvcContext mvcContext) {
 		this.models = models;
 		this.messagesDAO = messagesDAO;
 		this.usersDAO = usersDAO;
 		this.passwordHash = passwordHash;
 		passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
 		this.securityContext = securityContext;
+		// staticクラスForbiddenExceptionMapperで用いるため、static変数へ代入しておく
+		basePath = mvcContext.getBasePath();
 	}
 
 	@GET
 	public String home() {
-		models.put("appName", "メッセージアプリ");
 		return "index.jsp";
 	}
 
 	@GET
 	@Path("login")
-	public String getLogin() {
+	public String getLogin(@Context HttpServletRequest request,
+			@QueryParam("messages") final String messages,
+			@QueryParam("errors") final String errors) {
+		if (messages != null) {
+			models.put("messages", List.of(messages.split(",")));
+		}
+		if (errors != null) {
+			models.put("errors", List.of(errors.split(",")));
+		}
+		try {
+			request.logout();
+		} catch (ServletException e) {
+			e.printStackTrace();
+		}
 		return "login.jsp";
 	}
 
@@ -104,8 +128,9 @@ public class MyController {
 		 *  認証メカニズムが呼び出され、呼び出し元が正常に認証されました。
 		 */
 		switch (status) {
-			case SEND_CONTINUE, NOT_DONE -> models.put("err", "");
-			case SEND_FAILURE -> models.put("err", "ユーザ名もしくはパスワードが異なります");
+			case SEND_CONTINUE, NOT_DONE -> {
+			}
+			case SEND_FAILURE -> models.put("errors", List.of("invalid_user"));
 			case SUCCESS -> {
 				return "redirect:list";
 			}
@@ -121,7 +146,7 @@ public class MyController {
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
-		return "login.jsp";
+		return "redirect:login?messages=logout";
 	}
 
 	@GET
@@ -170,12 +195,11 @@ public class MyController {
 
 	@POST
 	@Path("users")
-	@RolesAllowed({ "ADMIN" })	
+	@RolesAllowed({ "ADMIN" })
 	public String createUsers(@BeanParam UserDTO user) {
 		var hash = passwordHash.generate(user.getPassword().toCharArray());
 		user.setPassword(hash);
 		usersDAO.create(user);
-
 		return "redirect:users";
 	}
 
@@ -197,4 +221,12 @@ public class MyController {
 		return "redirect:users";
 	}
 
+	@Provider
+	public static class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
+		@Override
+		public Response toResponse(ForbiddenException exception) {
+			// ExceptionMapper内でのリダイレクト実行は Response.seeOther()
+			return Response.seeOther(URI.create(MyController.basePath + "/login?errors=forbidden")).build();
+		}
+	}
 }

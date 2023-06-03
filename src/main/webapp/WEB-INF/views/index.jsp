@@ -5,10 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <link href="${mvc.basePath}/../app.css" rel="stylesheet">
-<title>${appName}</title>
+<title>メッセージアプリ：ホーム</title>
 </head>
 <body>
-	<p>${appName}へようこそ！</p>
+	<p>メッセージアプリへようこそ！</p>
 	<p>
 		<a href="${mvc.basePath}/list">ログイン</a>
 	</p>
