@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +14,7 @@
 		<button>ログイン</button>
 	</form>
 	<p style="color: red">
-		${ errorBean.message }
+		${ err }
 	</p>
 	<p>
 		<a href="${mvc.basePath}/">ホームへ戻る</a>

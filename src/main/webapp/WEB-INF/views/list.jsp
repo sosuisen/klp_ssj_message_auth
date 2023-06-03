@@ -9,7 +9,9 @@
 <title>メッセージの累積</title>
 </head>
 <body>
-	${loginUserModel.name}さん、こんにちは！<br>
+	<a href="${mvc.basePath}/users">ユーザ管理</a>
+	<hr>
+	${ name }${ isAdmin ? "[管理者]" : "" }さん、こんにちは！
 	<form action="${mvc.basePath}/list" method="POST">
 		メッセージ：<input type="text" name="message">
 		<button>送信</button>
@@ -27,7 +29,7 @@
 		<div>${mes.name}:${mes.message}
 	</c:forEach>
 	<p>
-		<a href="${mvc.basePath}/login">ログアウト</a>
+		<a href="${mvc.basePath}/logout">ログアウト</a>
 	</p>
 	<p>
 		<a href="${mvc.basePath}/">ホームへ戻る</a>
