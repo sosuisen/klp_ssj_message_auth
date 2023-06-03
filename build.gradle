@@ -1,0 +1,37 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'eclipse'
+	id 'eclipse-wtp'
+	id("fish.payara.micro-gradle-plugin") version "2.0.1"
+}
+
+sourceCompatibility = 17
+targetCompatibility = 17
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compileOnly 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+
+	// Lombok	
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    /*
+     * Jakarta MVC
+     * 全て implementation
+     */ 
+	implementation 'jakarta.mvc:jakarta.mvc-api:2.1.0'
+	implementation 'org.eclipse.krazo:krazo-core:3.0.1'
+	implementation 'org.eclipse.krazo:krazo-jersey:3.0.1'
+}
+
+payaraMicro {
+	useUberJar = true
+}
