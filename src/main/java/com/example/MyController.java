@@ -156,7 +156,7 @@ public class MyController {
 	@RolesAllowed({ "USER", "ADMIN" })
 	public String postSearch(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
-		// messages が @RedirectScoped なので、リダイレクト先でも参照可能。
+		// messagesDAO が @RedirectScoped なので、リダイレクト先でも参照可能。
 		return "redirect:list";
 	}
 
