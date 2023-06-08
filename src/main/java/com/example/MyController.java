@@ -187,7 +187,7 @@ public class MyController {
 
 	@GET
 	@Path("users")
-	@RolesAllowed({ "ADMIN" })
+	@RolesAllowed("ADMIN")
 	public String getUsers() {
 		usersDAO.getAll();
 		return "users.jsp";
@@ -195,7 +195,7 @@ public class MyController {
 
 	@POST
 	@Path("users")
-	@RolesAllowed({ "ADMIN" })
+	@RolesAllowed("ADMIN")
 	public String createUsers(@BeanParam UserDTO user) {
 		var hash = passwordHash.generate(user.getPassword().toCharArray());
 		user.setPassword(hash);
@@ -205,7 +205,7 @@ public class MyController {
 
 	@POST
 	@Path("user_delete")
-	@RolesAllowed({ "ADMIN" })
+	@RolesAllowed("ADMIN")
 	public String deleteUser(@FormParam("name") String name) {
 		usersDAO.delete(name);
 		return "redirect:users";
@@ -213,7 +213,7 @@ public class MyController {
 
 	@POST
 	@Path("user_update")
-	@RolesAllowed({ "ADMIN" })
+	@RolesAllowed("ADMIN")
 	public String updateUser(@BeanParam UserDTO user) {
 		var hash = passwordHash.generate(user.getPassword().toCharArray());
 		user.setPassword(hash);
