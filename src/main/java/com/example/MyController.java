@@ -220,6 +220,13 @@ public class MyController {
 		usersDAO.update(user);
 		return "redirect:users";
 	}
+	
+	@GET
+	@Path("admin")
+	@RolesAllowed("ADMIN")
+	public String getAdmin() {
+		return "admin.jsp";
+	}
 
 	@Provider
 	public static class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
