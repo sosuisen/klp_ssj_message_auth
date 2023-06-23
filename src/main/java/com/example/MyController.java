@@ -55,12 +55,12 @@ import lombok.NoArgsConstructor;
 @Path("/")
 public class MyController {
 	private static String basePath; 
-			
+	
+	private final Models models;
+	
 	private final MessagesDAO messagesDAO;
 
 	private final UsersDAO usersDAO;
-
-	private final Models models;
 
 	private final Pbkdf2PasswordHash passwordHash;
 
