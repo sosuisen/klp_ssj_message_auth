@@ -221,6 +221,10 @@ public class MyController {
 		return "redirect:users";
 	}
 
+	/*
+	 * 権限がないページへのアクセスは 404 Forbidden になるため、
+	 * 対応するExceptionMapperを追加
+	 */
 	@Provider
 	public static class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
 		@Override
