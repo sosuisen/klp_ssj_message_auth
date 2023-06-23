@@ -151,7 +151,7 @@ public class MyController {
 
 	@GET
 	@Path("list")
-	@RolesAllowed({ "USER", "ADMIN" })
+	@RolesAllowed({ "USER", "ADMIN", "SUBADMIN" })
 	public String getMessage() {
 		models.put("isAdmin", securityContext.isCallerInRole("ADMIN"));
 		models.put("name", securityContext.getCallerPrincipal().getName());
@@ -161,7 +161,7 @@ public class MyController {
 
 	@POST
 	@Path("list")
-	@RolesAllowed({ "USER", "ADMIN" })
+	@RolesAllowed({ "USER", "ADMIN", "SUBADMIN" })
 	public String postMessage(@BeanParam MessageDTO mes) {
 		mes.setName(securityContext.getCallerPrincipal().getName());
 		messagesDAO.create(mes);
@@ -170,7 +170,7 @@ public class MyController {
 
 	@GET
 	@Path("clear")
-	@RolesAllowed({ "USER", "ADMIN" })
+	@RolesAllowed({ "USER", "ADMIN", "SUBADMIN" })
 	public String clearMessage() {
 		messagesDAO.deleteAll();
 		return "redirect:list";
@@ -178,7 +178,7 @@ public class MyController {
 
 	@POST
 	@Path("search")
-	@RolesAllowed({ "USER", "ADMIN" })
+	@RolesAllowed({ "USER", "ADMIN", "SUBADMIN" })
 	public String postSearch(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
 		// messagesDAO が @RedirectScoped なので、リダイレクト先でも参照可能。
@@ -187,8 +187,9 @@ public class MyController {
 
 	@GET
 	@Path("users")
-	@RolesAllowed("ADMIN")
+	@RolesAllowed({"ADMIN", "SUBADMIN"})
 	public String getUsers() {
+		models.put("isAdmin", securityContext.isCallerInRole("ADMIN"));
 		usersDAO.getAll();
 		return "users.jsp";
 	}

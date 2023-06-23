@@ -21,6 +21,7 @@
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>ADMIN</role-name>
+			<role-name>SUBADMIN</role-name>
 			<role-name>USER</role-name>
 		</auth-constraint>
 	</security-constraint>
@@ -30,5 +31,8 @@
 	</security-role>
 	<security-role>
 		<role-name>ADMIN</role-name>
+	</security-role>
+	<security-role>
+		<role-name>SUBADMIN</role-name>
 	</security-role>
 </web-app>
