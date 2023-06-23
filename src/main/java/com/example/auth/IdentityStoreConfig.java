@@ -10,9 +10,9 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 	テーブル定義。password のサイズはハッシュ値が収まるサイズにすること。
 
 	create table users(
-		name VARCHAR(30) PRIMARY KEY,
-		role VARCHAR(30) NOT NULL,
-		password VARCHAR(256) NOT NULL
+  		name VARCHAR(30) PRIMARY KEY,
+  		role VARCHAR(30) NOT NULL,
+  		password VARCHAR(117) NOT NULL
 	);
 */
 
