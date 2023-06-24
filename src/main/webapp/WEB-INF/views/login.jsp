@@ -11,21 +11,16 @@
 <body>
 	[<a href="${mvc.basePath}/">ホーム</a>]
 	<hr>
-	<form action="${mvc.basePath}/login" method="POST">
-		ユーザ名：<input type="text" name="name"><br> パスワード：<input
-			type="password" name="password">
+	<form action="j_security_check" method="POST">
+		ユーザ名：<input type="text" name="j_username"><br>
+		パスワード：<input type="password" name="j_password">
 		<button>ログイン</button>
 	</form>
-	<p style="color: green">
-		<c:forEach var="msg" items="${ messages }"> 
-			<c:if test="${ msg == 'logout' }">ログアウトしました。<br></c:if>
-		</c:forEach>
-	</p>
 	<p style="color: red">
-		<c:forEach var="err" items="${ errors }"> 
-			<c:if test="${ err == 'invalid_user' }">ユーザ名もしくはパスワードが異なります。<br></c:if>
-			<c:if test="${ err == 'forbidden' }">このアカウントでは権限のない操作です。<br></c:if>			
-		</c:forEach>
+		<c:choose>
+			<c:when test="${ error == 'invalid_user' }">ユーザ名もしくはパスワードが異なります。<br></c:when>
+			<c:when test="${ error == 'forbidden' }">このアカウントでは権限のない操作です。<br></c:when>			
+		</c:choose>
 	</p>
 </body>
 </html>

@@ -1,7 +1,7 @@
 package com.example.auth;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.security.enterprise.authentication.mechanism.http.CustomFormAuthenticationMechanismDefinition;
+import jakarta.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.LoginToContinue;
 
 /*
@@ -13,13 +13,13 @@ import jakarta.security.enterprise.authentication.mechanism.http.LoginToContinue
  * trueのときはforwardで行われます。デフォルトはtrue。
  * いずれも@GET @Path("login")のメソッドが呼ばれますが、
  * forwardの場合、URLは元のパス（例えば/msg/list）のままで
- * redirectの場合、URLは/msg/login に変わります。
+ * redirectの場合、URLは/msg/login に変わります。通常はtrueで良いです。
  */
-@CustomFormAuthenticationMechanismDefinition(
+@FormAuthenticationMechanismDefinition(
     loginToContinue = @LoginToContinue(
         loginPage="/msg/login",
-        errorPage="/msg/login",
-        useForwardToLogin = false
+        errorPage="/msg/login?error=invalid_user",
+        useForwardToLogin = true
     )
 )
 @ApplicationScoped
