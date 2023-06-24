@@ -170,7 +170,7 @@ public class MyController {
 
 	@GET
 	@Path("clear")
-	@RolesAllowed({ "USER", "ADMIN" })
+	@RolesAllowed({ "ADMIN" })
 	public String clearMessage() {
 		messagesDAO.deleteAll();
 		return "redirect:list";
