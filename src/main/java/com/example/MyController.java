@@ -215,8 +215,10 @@ public class MyController {
 	@Path("user_update")
 	@RolesAllowed("ADMIN")
 	public String updateUser(@BeanParam UserDTO user) {
-		var hash = passwordHash.generate(user.getPassword().toCharArray());
-		user.setPassword(hash);
+		if (!user.getPassword().equals("")) {
+			var hash = passwordHash.generate(user.getPassword().toCharArray());
+			user.setPassword(hash);
+		}
 		usersDAO.update(user);
 		return "redirect:users";
 	}
