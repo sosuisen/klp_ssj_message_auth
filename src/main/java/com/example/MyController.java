@@ -14,7 +14,6 @@ import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
 import jakarta.mvc.MvcContext;
-import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,17 +54,14 @@ public class MyController {
 
 	private final Pbkdf2PasswordHash passwordHash;
 
-	private final SecurityContext securityContext;
-
 	@Inject
 	public MyController(Models models, MessagesDAO messagesDAO, UsersDAO usersDAO, Pbkdf2PasswordHash passwordHash,
-			SecurityContext securityContext, MvcContext mvcContext) {
+			MvcContext mvcContext) {
 		this.models = models;
 		this.messagesDAO = messagesDAO;
 		this.usersDAO = usersDAO;
 		this.passwordHash = passwordHash;
 		passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
-		this.securityContext = securityContext;
 	}
 
 	@GET
@@ -75,18 +71,17 @@ public class MyController {
 
 	@GET
 	@Path("login")
-	public String getLogin(@Context HttpServletRequest request,
-			@QueryParam("error") final String error) {
+	public String getLogin(@QueryParam("error") final String error) {
 		models.put("error", error);
 		return "login.jsp";
 	}
 
 	@GET
 	@Path("logout")
-	public String getLogout(@Context HttpServletRequest request) {
+	public String getLogout(@Context HttpServletRequest req) {
 		try {
-			request.logout(); // ログアウトする
-			request.getSession().invalidate(); // セッションを無効化する
+			req.logout(); // ログアウトする
+			req.getSession().invalidate(); // セッションを無効化する
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
@@ -97,15 +92,7 @@ public class MyController {
 	@Path("list")
 	@RolesAllowed({ "USER", "ADMIN" })
 	public String getMessage(@Context HttpServletRequest req) {
-		// adminでログインした場合、
-		// securityContext.isCallerInRole("ADMIN")がtrueを返すべきですが、
-		// ログイン成功直後のリダイレクトでgetMessage()が呼ばれたときには
-		// 失敗するバグがあります（2023/6/25現在）。
-		// models.put("isAdmin", securityContext.isCallerInRole("ADMIN"));
-		// 
-		// 回避策としてHttpServletRequestのisUserInRoleを用います。		
-		models.put("isAdmin", req.isUserInRole("ADMIN"));
-		models.put("name", securityContext.getCallerPrincipal().getName());
+		models.put("req", req);		
 		messagesDAO.getAll();
 		return "list.jsp";
 	}
@@ -113,8 +100,8 @@ public class MyController {
 	@POST
 	@Path("list")
 	@RolesAllowed({ "USER", "ADMIN" })
-	public String postMessage(@BeanParam MessageDTO mes) {
-		mes.setName(securityContext.getCallerPrincipal().getName());
+	public String postMessage(@BeanParam MessageDTO mes, @Context HttpServletRequest req) {
+		mes.setName(req.getRemoteUser());
 		messagesDAO.create(mes);
 		return "redirect:list";
 	}
@@ -180,23 +167,23 @@ public class MyController {
 	 */
 	@Provider
 	public static class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
-		private HttpServletRequest request;
+		private HttpServletRequest req;
 
 		@Inject
-		public ForbiddenExceptionMapper(@Context HttpServletRequest request) {
-			this.request = request;
+		public ForbiddenExceptionMapper(@Context HttpServletRequest req) {
+			this.req = req;
 		}
 
 		@Override
 		public Response toResponse(ForbiddenException exception) {
 			try {
-				request.logout();
-				request.getSession().invalidate();
+				req.logout();
+				req.getSession().invalidate();
 			} catch (ServletException e) {
 				e.printStackTrace();
 			}
 			// ExceptionMapper内でのリダイレクト実行は Response.seeOther()
-			return Response.seeOther(URI.create(request.getRequestURL().toString() + "?error=forbidden")).build();
+			return Response.seeOther(URI.create(req.getRequestURL().toString() + "?error=forbidden")).build();
 		}
 	}
 }

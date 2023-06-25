@@ -11,7 +11,7 @@
 <body>
 	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>] [<a href="${mvc.basePath}/logout">ログアウト</a>]
 	<hr>
-	${ name }${ isAdmin ? "[管理者]" : "" }さん、こんにちは！
+	${ req.getRemoteUser() }${ req.isUserInRole("ADMIN") ? "[管理者]" : "" }さん、こんにちは！
 	<form action="${mvc.basePath}/list" method="POST">
 		メッセージ：<input type="text" name="message">
 		<button>送信</button>
