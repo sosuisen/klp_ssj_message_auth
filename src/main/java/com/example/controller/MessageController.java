@@ -1,33 +1,22 @@
-package com.example;
+package com.example.controller;
 
-import java.net.URI;
-
-import com.example.auth.IdentityStoreConfig;
 import com.example.model.message.MessageDTO;
 import com.example.model.message.MessagesDAO;
-import com.example.model.user.UserDTO;
-import com.example.model.user.UsersDAO;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
-import jakarta.mvc.MvcContext;
-import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BeanParam;
-import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
 import lombok.NoArgsConstructor;
 
 /**
@@ -45,23 +34,15 @@ import lombok.NoArgsConstructor;
 @RequestScoped
 @NoArgsConstructor(force = true)
 @Path("/")
-public class MyController {
+public class MessageController {
 	private final Models models;
 
 	private final MessagesDAO messagesDAO;
 
-	private final UsersDAO usersDAO;
-
-	private final Pbkdf2PasswordHash passwordHash;
-
 	@Inject
-	public MyController(Models models, MessagesDAO messagesDAO, UsersDAO usersDAO, Pbkdf2PasswordHash passwordHash,
-			MvcContext mvcContext) {
+	public MessageController(Models models, MessagesDAO messagesDAO) {
 		this.models = models;
 		this.messagesDAO = messagesDAO;
-		this.usersDAO = usersDAO;
-		this.passwordHash = passwordHash;
-		passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
 	}
 
 	@GET
@@ -119,71 +100,7 @@ public class MyController {
 	@RolesAllowed({ "USER", "ADMIN" })
 	public String postSearch(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
-		// messagesDAO が @RedirectScoped なので、リダイレクト先でも参照可能。
+		// messagesModel が @RedirectScoped なので、リダイレクト先でも参照可能。
 		return "redirect:list";
-	}
-
-	@GET
-	@Path("users")
-	@RolesAllowed("ADMIN")
-	public String getUsers() {
-		usersDAO.getAll();
-		return "users.jsp";
-	}
-
-	@POST
-	@Path("users")
-	@RolesAllowed("ADMIN")
-	public String createUsers(@BeanParam UserDTO user) {
-		var hash = passwordHash.generate(user.getPassword().toCharArray());
-		user.setPassword(hash);
-		usersDAO.create(user);
-		return "redirect:users";
-	}
-
-	@POST
-	@Path("user_delete")
-	@RolesAllowed("ADMIN")
-	public String deleteUser(@FormParam("name") String name) {
-		usersDAO.delete(name);
-		return "redirect:users";
-	}
-
-	@POST
-	@Path("user_update")
-	@RolesAllowed("ADMIN")
-	public String updateUser(@BeanParam UserDTO user) {
-		if (!user.getPassword().equals("")) {
-			var hash = passwordHash.generate(user.getPassword().toCharArray());
-			user.setPassword(hash);
-		}
-		usersDAO.update(user);
-		return "redirect:users";
-	}
-
-	/*
-	 * 権限がないページへのアクセスは 403 Forbidden になるため、
-	 * 対応するExceptionMapperを追加
-	 */
-	@Provider
-	public static class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenException> {
-		private HttpServletRequest req;
-
-		@Inject
-		public ForbiddenExceptionMapper(@Context HttpServletRequest req) {
-			this.req = req;
-		}
-
-		@Override
-		public Response toResponse(ForbiddenException exception) {
-			try {
-				req.logout();
-				req.getSession().invalidate();
-			} catch (ServletException e) {
-				e.printStackTrace();
-			}
-			// ExceptionMapper内でのリダイレクト実行は Response.seeOther()
-			return Response.seeOther(URI.create(req.getRequestURL().toString() + "?error=forbidden")).build();
-		}
 	}
 }
