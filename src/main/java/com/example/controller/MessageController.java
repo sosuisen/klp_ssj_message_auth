@@ -72,7 +72,7 @@ public class MessageController {
 	@GET
 	@Path("list")
 	@RolesAllowed({ "USER", "ADMIN" })
-	public String getMessage(@Context HttpServletRequest req) {
+	public String getMessages(@Context HttpServletRequest req) {
 		models.put("req", req);		
 		messagesDAO.getAll();
 		return "list.jsp";
@@ -90,7 +90,7 @@ public class MessageController {
 	@GET
 	@Path("clear")
 	@RolesAllowed({ "ADMIN" })
-	public String clearMessage() {
+	public String clearMessages() {
 		messagesDAO.deleteAll();
 		return "redirect:list";
 	}
@@ -98,7 +98,7 @@ public class MessageController {
 	@POST
 	@Path("search")
 	@RolesAllowed({ "USER", "ADMIN" })
-	public String search(@FormParam("keyword") String keyword) {
+	public String searchMessages(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
 		// messagesModel が @RedirectScoped なので、リダイレクト先でも参照可能。
 		return "redirect:list";

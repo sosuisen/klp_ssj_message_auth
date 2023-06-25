@@ -44,7 +44,7 @@ public class UserController {
 	@POST
 	@Path("users")
 	@RolesAllowed("ADMIN")
-	public String createUsers(@BeanParam UserDTO user) {
+	public String createUser(@BeanParam UserDTO user) {
 		var hash = passwordHash.generate(user.getPassword().toCharArray());
 		user.setPassword(hash);
 		usersDAO.create(user);
