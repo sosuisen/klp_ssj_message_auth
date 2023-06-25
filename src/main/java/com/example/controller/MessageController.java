@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.model.message.MessageDTO;
 import com.example.model.message.MessagesDAO;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -33,7 +34,7 @@ import lombok.NoArgsConstructor;
 @Controller
 @RequestScoped
 @NoArgsConstructor(force = true)
-@RolesAllowed({"USER", "ADMIN"})
+@PermitAll
 @Path("/")
 public class MessageController {
 	private final Models models;
@@ -46,6 +47,9 @@ public class MessageController {
 		this.messagesDAO = messagesDAO;
 	}
 
+	/**
+	 * 以下は認証不要（web.xmlで設定）
+	 */
 	@GET
 	public String home() {
 		return "index.jsp";
@@ -58,6 +62,9 @@ public class MessageController {
 		return "login.jsp";
 	}
 
+	/**
+	 * 以下は要認証（web.xmlで設定）
+	 */
 	@GET
 	@Path("logout")
 	public String logout(@Context HttpServletRequest req) {
