@@ -97,8 +97,10 @@ public class MyController {
 	@Path("list")
 	@RolesAllowed({ "USER", "ADMIN" })
 	public String getMessage(@Context HttpServletRequest req) {
-		// adminでログインしたときsecurityContext.isCallerInRole("ADMIN")が成功するべきですが、
-		// ログイン直後の最初の1回が失敗するバグがあります（2023/6/25現在）。
+		// adminでログインした場合、
+		// securityContext.isCallerInRole("ADMIN")がtrueを返すべきですが、
+		// ログイン成功直後のリダイレクトでgetMessage()が呼ばれたときには
+		// 失敗するバグがあります（2023/6/25現在）。
 		// models.put("isAdmin", securityContext.isCallerInRole("ADMIN"));
 		// 
 		// 回避策としてHttpServletRequestのisUserInRoleを用います。		
