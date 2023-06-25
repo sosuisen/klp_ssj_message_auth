@@ -33,6 +33,7 @@ import lombok.NoArgsConstructor;
 @Controller
 @RequestScoped
 @NoArgsConstructor(force = true)
+@RolesAllowed({"USER", "ADMIN"})
 @Path("/")
 public class MessageController {
 	private final Models models;
@@ -71,7 +72,6 @@ public class MessageController {
 
 	@GET
 	@Path("list")
-	@RolesAllowed({ "USER", "ADMIN" })
 	public String getMessages(@Context HttpServletRequest req) {
 		models.put("req", req);		
 		messagesDAO.getAll();
@@ -80,7 +80,6 @@ public class MessageController {
 
 	@POST
 	@Path("list")
-	@RolesAllowed({ "USER", "ADMIN" })
 	public String postMessage(@BeanParam MessageDTO mes, @Context HttpServletRequest req) {
 		mes.setName(req.getRemoteUser());
 		messagesDAO.create(mes);
@@ -89,7 +88,7 @@ public class MessageController {
 
 	@GET
 	@Path("clear")
-	@RolesAllowed({ "ADMIN" })
+	@RolesAllowed("ADMIN")
 	public String clearMessages() {
 		messagesDAO.deleteAll();
 		return "redirect:list";
@@ -97,7 +96,6 @@ public class MessageController {
 
 	@POST
 	@Path("search")
-	@RolesAllowed({ "USER", "ADMIN" })
 	public String searchMessages(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
 		// messagesModel が @RedirectScoped なので、リダイレクト先でも参照可能。
