@@ -52,14 +52,14 @@ public class MessageController {
 
 	@GET
 	@Path("login")
-	public String getLogin(@QueryParam("error") final String error) {
+	public String login(@QueryParam("error") final String error) {
 		models.put("error", error);
 		return "login.jsp";
 	}
 
 	@GET
 	@Path("logout")
-	public String getLogout(@Context HttpServletRequest req) {
+	public String logout(@Context HttpServletRequest req) {
 		try {
 			req.logout(); // ログアウトする
 			req.getSession().invalidate(); // セッションを無効化する
@@ -98,7 +98,7 @@ public class MessageController {
 	@POST
 	@Path("search")
 	@RolesAllowed({ "USER", "ADMIN" })
-	public String postSearch(@FormParam("keyword") String keyword) {
+	public String search(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
 		// messagesModel が @RedirectScoped なので、リダイレクト先でも参照可能。
 		return "redirect:list";
