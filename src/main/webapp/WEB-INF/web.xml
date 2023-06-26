@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app
-    xmlns="https://jakarta.ee/xml/ns/jakartaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-    version="6.0">
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+	version="6.0">
 	<!-- The index and login pages are excluded from authentication. -->
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>no auth</web-resource-name>
-			<url-pattern>/msg</url-pattern>			
-			<url-pattern>/msg/</url-pattern>			
+			<url-pattern>/msg</url-pattern>
+			<url-pattern>/msg/</url-pattern>
 			<url-pattern>/msg/login</url-pattern>
-			</web-resource-collection>
+		</web-resource-collection>
 	</security-constraint>
 
 	<security-constraint>
@@ -20,8 +19,7 @@
 			<url-pattern>/msg/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>ADMIN</role-name>
-			<role-name>USER</role-name>
+			<role-name>*</role-name>
 		</auth-constraint>
 	</security-constraint>
 
