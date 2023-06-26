@@ -17,7 +17,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Context;
 import lombok.NoArgsConstructor;
 
 /**
@@ -38,13 +37,14 @@ import lombok.NoArgsConstructor;
 @Path("/")
 public class MessageController {
 	private final Models models;
-
 	private final MessagesDAO messagesDAO;
+	private final HttpServletRequest req;
 
 	@Inject
-	public MessageController(Models models, MessagesDAO messagesDAO) {
+	public MessageController(Models models, MessagesDAO messagesDAO, HttpServletRequest req) {
 		this.models = models;
 		this.messagesDAO = messagesDAO;
+		this.req = req;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class MessageController {
 	 */
 	@GET
 	@Path("logout")
-	public String logout(@Context HttpServletRequest req) {
+	public String logout() {
 		try {
 			req.logout(); // ログアウトする
 			req.getSession().invalidate(); // セッションを無効化する
@@ -79,7 +79,7 @@ public class MessageController {
 
 	@GET
 	@Path("list")
-	public String getMessages(@Context HttpServletRequest req) {
+	public String getMessages() {
 		models.put("req", req);		
 		messagesDAO.getAll();
 		return "list.jsp";
@@ -87,7 +87,7 @@ public class MessageController {
 
 	@POST
 	@Path("list")
-	public String postMessage(@BeanParam MessageDTO mes, @Context HttpServletRequest req) {
+	public String postMessage(@BeanParam MessageDTO mes) {
 		mes.setName(req.getRemoteUser());
 		messagesDAO.create(mes);
 		return "redirect:list";

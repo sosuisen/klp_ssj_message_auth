@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
@@ -20,7 +19,7 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 	private HttpServletRequest req;
 
 	@Inject
-	public ForbiddenExceptionMapper(@Context HttpServletRequest req) {
+	public ForbiddenExceptionMapper(HttpServletRequest req) {
 		this.req = req;
 	}
 

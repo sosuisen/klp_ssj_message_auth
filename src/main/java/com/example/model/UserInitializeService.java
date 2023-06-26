@@ -1,4 +1,4 @@
-package com.example.auth;
+package com.example.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.example.auth.IdentityStoreConfig;
 import com.example.model.user.UserDTO;
 
 import jakarta.annotation.Resource;
@@ -22,9 +23,13 @@ public class UserInitializeService {
 	@Resource(lookup = "jdbc/__default")
 	private DataSource ds;
 
-	@Inject
 	private Pbkdf2PasswordHash passwordHash;
-
+	
+	@Inject
+	public UserInitializeService(Pbkdf2PasswordHash passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+	
 	/**
 	 * アプリケーション起動時に実行する処理を書く
 	 */
@@ -42,7 +47,7 @@ public class UserInitializeService {
 
 		if (count == 0) {
 			/**
-			 * ユーザが登録されていなければ登録
+			 * 初期ユーザが登録されていなければ登録
 			 */
 			passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
 			var initialUsers = List.of(
