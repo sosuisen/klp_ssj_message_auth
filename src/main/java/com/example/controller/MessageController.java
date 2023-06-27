@@ -108,4 +108,14 @@ public class MessageController {
 		// messagesModel が @RedirectScoped なので、リダイレクト先でも参照可能。
 		return "redirect:list";
 	}
+	
+	/**
+	 * 基本課題
+	 */
+	@GET
+	@Path("manager")
+	@RolesAllowed("ADMIN")
+	public String getManager() {
+		return "manager.jsp";
+	}
 }
