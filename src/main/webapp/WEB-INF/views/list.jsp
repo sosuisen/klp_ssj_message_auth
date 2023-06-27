@@ -9,7 +9,7 @@
 <title>メッセージアプリ：メッセージ</title>
 </head>
 <body>
-	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>] <c:if test="${ req.isUserInRole('ADMIN') }">[<a href="${mvc.basePath}/manager">管理者ページ</a>]</c:if> [<a href="${mvc.basePath}/logout">ログアウト</a>]
+	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>] [<a href="${mvc.basePath}/manager">管理者ページ</a>] [<a href="${mvc.basePath}/logout">ログアウト</a>]
 	<hr>
 	${ req.getRemoteUser() }${ req.isUserInRole("ADMIN") ? "[管理者]" : "" }さん、こんにちは！
 	<form action="${mvc.basePath}/list" method="POST">
@@ -20,9 +20,11 @@
 		検索語：<input type="text" name="keyword">
 		<button>検索</button>
 	</form>
-	<form action="${mvc.basePath}/clear" method="GET">
-		<button>Clear</button>
-	</form>
+	<c:if test="${ req.isUserInRole('ADMIN') }">
+		<form action="${mvc.basePath}/clear" method="GET">
+			<button>Clear</button>
+		</form>
+	</c:if>
 	<hr>
 	<h1>メッセージ一覧</h1>
 	<c:forEach var="mes" items="${messagesModel}">

@@ -27,6 +27,9 @@
 		<role-name>USER</role-name>
 	</security-role>
 	<security-role>
+		<role-name>SUBADMIN</role-name>
+	</security-role>
+	<security-role>
 		<role-name>ADMIN</role-name>
 	</security-role>
 </web-app>
