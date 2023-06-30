@@ -96,7 +96,7 @@ public class UsersDAO {
 	public void update(UserDTO userDTO) {
 		try (
 				Connection conn = ds.getConnection()) {
-			if (userDTO.getPassword().equals(""))
+			if (userDTO.getPassword().isEmpty())
 				try (PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET role=? where name=?")) {
 					pstmt.setString(1, userDTO.getRole());
 					pstmt.setString(2, userDTO.getName());

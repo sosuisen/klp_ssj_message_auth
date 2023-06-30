@@ -60,7 +60,7 @@ public class UserController {
 	@POST
 	@Path("user_update")
 	public String updateUser(@BeanParam UserDTO user) {
-		if (!user.getPassword().equals("")) {
+		if (!user.getPassword().isEmpty()) {
 			var hash = passwordHash.generate(user.getPassword().toCharArray());
 			user.setPassword(hash);
 		}
