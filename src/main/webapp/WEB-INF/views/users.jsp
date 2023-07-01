@@ -33,21 +33,20 @@
 	</form>
 	<hr>
 	<h1>ユーザ一覧</h1>
-	<div>
-		<div class="row">
-			<div>ユーザ名</div>
-			<div>ロール</div>
-			<div>パスワード</div>
-		</div>
 
-		<c:forEach var="user" items="${usersModel}">
-			<form class="row" method="POST">
-				<input type="hidden" name="name" value="${user.name}"> <span>${user.name}</span>
-				<input type="text" name="role" value="${user.role}">
-				<input type="password" name="password">
-				<button formaction="${mvc.basePath}/user_update">更新</button>
-				<button formaction="${mvc.basePath}/user_delete">削除</button>
-			</form>
-		</c:forEach>
+	<div class="row">
+		<div>ユーザ名</div>
+		<div>ロール</div>
+		<div>パスワード</div>
+	</div>
+	<c:forEach var="user" items="${usersModel}">
+		<form class="row" method="POST">
+			<input type="hidden" name="name" value="${user.name}"> <span>${user.name}</span>
+			<input type="text" name="role" value="${user.role}">
+			<input type="password" name="password">
+			<button formaction="${mvc.basePath}/user_update">更新</button>
+			<button formaction="${mvc.basePath}/user_delete">削除</button>
+		</form>
+	</c:forEach>
 </body>
 </html>
