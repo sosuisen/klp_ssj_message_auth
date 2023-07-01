@@ -16,7 +16,7 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 	);
 */
 
-// アノテーションの中ではEL式を使うことができます。
+//hashAlgorithmParamatersの値はEL式を使うことができます。
 @DatabaseIdentityStoreDefinition(
 		dataSourceLookup = "jdbc/__default",
 		callerQuery = "select password from users where name = ?",
