@@ -9,7 +9,9 @@
 <title>メッセージアプリ：メッセージ</title>
 </head>
 <body>
-	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>] [<a href="${mvc.basePath}/logout">ログアウト</a>]
+	[<a href="${mvc.basePath}/">ホーム</a>] [<a href="${mvc.basePath}/users">ユーザ管理</a>]
+	 [<a href="${mvc.basePath}/manager">管理者ページ</a>]
+	 [<a href="${mvc.basePath}/logout">ログアウト</a>]
 	<hr>
 	${ req.getRemoteUser() }${ req.isUserInRole("ADMIN") ? "[管理者]" : "" }さん、こんにちは！
 	<form action="${mvc.basePath}/list" method="POST">

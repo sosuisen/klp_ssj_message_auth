@@ -118,4 +118,11 @@ public class MessageController {
 		models.put("messages", messagesDAO.search(keyword));
 		return "list.jsp";
 	}
+	
+	@GET
+	@Path("manager")
+	@RolesAllowed("ADMIN")
+	public String getManager() {
+		return "manager.jsp";
+	}
 }
