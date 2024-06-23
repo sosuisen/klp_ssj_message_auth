@@ -2,6 +2,7 @@ package com.example.auth;
 
 import java.util.Map;
 
+import jakarta.annotation.security.DeclareRoles;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
@@ -16,6 +17,7 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 	);
 */
 
+@DeclareRoles({"ADMIN", "USER"})
 // アノテーションの中ではEL式を使うことができます。
 @DatabaseIdentityStoreDefinition(
 		dataSourceLookup = "jdbc/__default",
