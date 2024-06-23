@@ -22,9 +22,11 @@
 		検索語：<input type="text" name="keyword">
 		<button>検索</button>
 	</form>
-	<form action="${mvc.basePath}/clear" method="GET">
-		<button>Clear</button>
-	</form>
+	<c:if test="${ req.isUserInRole('ADMIN') }">
+		<form action="${mvc.basePath}/clear" method="GET">
+			<button>Clear</button>
+		</form>
+	</c:if>
 	<hr>
 	<h1>メッセージ一覧</h1>
 	<c:forEach var="mes" items="${messages}">

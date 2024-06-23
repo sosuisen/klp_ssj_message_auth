@@ -17,7 +17,7 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 	);
 */
 
-@DeclareRoles({"ADMIN", "USER"})
+@DeclareRoles({"ADMIN", "SUBADMIN", "USER"})
 // アノテーションの中ではEL式を使うことができます。
 @DatabaseIdentityStoreDefinition(
 		dataSourceLookup = "jdbc/__default",

@@ -32,7 +32,7 @@ import lombok.extern.java.Log;
 @NoArgsConstructor(force = true)
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 @Log
-@RolesAllowed("ADMIN")
+@RolesAllowed({"ADMIN", "SUBADMIN"})
 @Path("/")
 public class UserController {
 	private final Models models;
@@ -52,12 +52,14 @@ public class UserController {
 	@GET
 	@Path("users")
 	public String getUsers() throws SQLException {
+		models.put("req", req);
 		models.put("users", usersDAO.getAll());
 		return "users.jsp";
 	}
 
 	@POST
 	@Path("users")
+	@RolesAllowed("ADMIN")
 	public String createUser(@BeanParam UserDTO user) throws SQLException {
 		var hash = passwordHash.generate(user.getPassword().toCharArray());
 		user.setPassword(hash);
@@ -67,6 +69,7 @@ public class UserController {
 
 	@POST
 	@Path("user_delete")
+	@RolesAllowed("ADMIN")
 	public String deleteUser(@FormParam("name") String name) throws SQLException {
 		usersDAO.delete(name);
 		return "redirect:users";
@@ -74,6 +77,7 @@ public class UserController {
 
 	@POST
 	@Path("user_update")
+	@RolesAllowed("ADMIN")
 	public String updateUser(@BeanParam UserDTO user) throws SQLException {
 		if (!user.getPassword().equals("")) {
 			var hash = passwordHash.generate(user.getPassword().toCharArray());
