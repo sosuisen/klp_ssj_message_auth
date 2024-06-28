@@ -114,6 +114,7 @@ public class MessageController {
 	@GET
 	@Path("search")
 	public String getSearch(@QueryParam("keyword") String keyword) throws SQLException {
+		models.put("req", req);			
 		models.put("messages", messagesDAO.search(keyword));
 		return "list.jsp";
 	}
