@@ -44,7 +44,7 @@ public class UserInitializeService {
 			/**
 			 * 初期ユーザが登録されていなければ登録
 			 */
-			passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
+			passwordHash.initialize(IdentityStoreConfig.getHashParams());
 			var initialUsers = List.of(
 					new UserDTO("user", "USER", passwordHash.generate("foo".toCharArray())),
 					new UserDTO("admin", "ADMIN", passwordHash.generate("foo".toCharArray())));

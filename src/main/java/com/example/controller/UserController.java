@@ -42,7 +42,7 @@ public class UserController {
 
 	@PostConstruct
 	public void afterInit() {
-		passwordHash.initialize(IdentityStoreConfig.HASH_PARAMS);
+		passwordHash.initialize(IdentityStoreConfig.getHashParams());
 		log.log(Level.INFO, "[user]%s, [ip]%s [url]%s".formatted(
 				req.getRemoteUser(),
 				req.getRemoteAddr(),
