@@ -32,7 +32,8 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 @ApplicationScoped
 public class IdentityStoreConfig {
 	public static Map<String, String> getHashParams() {
-		String[] params = IdentityStoreConfig.class.getAnnotation(DatabaseIdentityStoreDefinition.class).hashAlgorithmParameters();
+		String[] params = IdentityStoreConfig.class
+				.getAnnotation(DatabaseIdentityStoreDefinition.class).hashAlgorithmParameters();
 		var map = new HashMap<String, String>();
 		for (var param : params) {
 			var pair = param.split("=");
@@ -46,3 +47,4 @@ public class IdentityStoreConfig {
 		return Arrays.asList(roles);
 	}
 }
+
